@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="开始Javascript 支持的变量声明方式其实有四种 var let const 隐式创建 一 . 隐式创建变量当赋值给未声明的变量, 则执行赋值后, 该变量会被隐式地创建为全局变量（它将成为全局对象的属性）。 12345function x() &amp;#123;  y &#x3D; 1;   &#x2F;&#x2F; 在严格模式（strict mode）下会抛出 ReferenceError 异常">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Javascript 中的变量声明 - let, const, var">
+<meta property="og:url" content="http://yoursite.com/2021/03/17/javascript-var-let-difference-md/index.html">
+<meta property="og:site_name" content="Ocean&#39;s Blog">
+<meta property="og:description" content="开始Javascript 支持的变量声明方式其实有四种 var let const 隐式创建 一 . 隐式创建变量当赋值给未声明的变量, 则执行赋值后, 该变量会被隐式地创建为全局变量（它将成为全局对象的属性）。 12345function x() &amp;#123;  y &#x3D; 1;   &#x2F;&#x2F; 在严格模式（strict mode）下会抛出 ReferenceError 异常">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-03-17T15:08:07.000Z">
+<meta property="article:modified_time" content="2021-03-18T05:22:22.000Z">
+<meta property="article:author" content="Ocean Wang">
+<meta property="article:tag" content="javascript">
+<meta property="article:tag" content="basic">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2021/03/17/javascript-var-let-difference-md/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'default'
+  };
+</script>
+
+  <title>Javascript 中的变量声明 - let, const, var | Ocean's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Ocean's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="default">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/03/17/javascript-var-let-difference-md/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Ocean Wang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ocean's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Javascript 中的变量声明 - let, const, var
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-03-17 23:08:07" itemprop="dateCreated datePublished" datetime="2021-03-17T23:08:07+08:00">2021-03-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-03-18 13:22:22" itemprop="dateModified" datetime="2021-03-18T13:22:22+08:00">2021-03-18</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h3><p>Javascript 支持的变量声明方式其实有四种 <code>var</code> <code>let</code> <code>const</code> <code>隐式创建</code></p>
+<h3 id="一-隐式创建变量"><a href="#一-隐式创建变量" class="headerlink" title="一 . 隐式创建变量"></a>一 . 隐式创建变量</h3><p>当赋值给未声明的变量, 则执行赋值后, 该变量会被隐式地创建为全局变量（它将成为全局对象的属性）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function x() &#123;</span><br><span class="line">  y &#x3D; 1;   &#x2F;&#x2F; 在严格模式（strict mode）下会抛出 ReferenceError 异常</span><br><span class="line">&#125;</span><br><span class="line">x();</span><br><span class="line">console.log(y); &#x2F;&#x2F; 打印 &quot;1&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="二-使用-var-创建变量"><a href="#二-使用-var-创建变量" class="headerlink" title="二. 使用 var 创建变量"></a>二. 使用 var 创建变量</h3><p>var 是 ES6 发布之前仅存的一种变量声明方式，用 var 声明变量有一下几个特征</p>
+<h4 id="1-作用域"><a href="#1-作用域" class="headerlink" title="1. 作用域"></a>1. 作用域</h4><p>var 的作用域只有两种 函数级别作用域 和 全局作用域 (let const 可以声明块作用域，这个我们在后面会谈到)</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 全局作用域</span><br><span class="line">var a  &#x3D; 1;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 块作用域不会生效</span><br><span class="line">if (true) &#123;</span><br><span class="line">  var b &#x3D; true; &#x2F;&#x2F; 使用 &quot;var&quot; 而不是 &quot;let&quot;</span><br><span class="line">&#125;</span><br><span class="line">alert(b); &#x2F;&#x2F; true，变量在 if 结束后仍存在</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 函数作用域</span><br><span class="line">function sayHi() &#123;</span><br><span class="line">  if (true) &#123;</span><br><span class="line">    var c &#x3D; &quot;Hello&quot;;</span><br><span class="line">  &#125;</span><br><span class="line">  alert(c); &#x2F;&#x2F; 能正常工作</span><br><span class="line">  alert(a); &#x2F;&#x2F; 正常工作</span><br><span class="line">&#125;</span><br><span class="line">sayHi();</span><br><span class="line">alert(c); &#x2F;&#x2F; Error: phrase is not defined</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-重复声明"><a href="#2-重复声明" class="headerlink" title="2. 重复声明"></a>2. 重复声明</h4><p>var 可以被声明多次, 新的声明会被忽略</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">var user &#x3D; &quot;Pete&quot;;</span><br><span class="line"></span><br><span class="line">var user &#x3D; &quot;John&quot;; &#x2F;&#x2F; 这个 &quot;var&quot; 无效（因为变量已经声明过了), 这里就是简单的赋值操作</span><br><span class="line">&#x2F;&#x2F; ……不会触发错误</span><br><span class="line"></span><br><span class="line">alert(user); &#x2F;&#x2F; John</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-声明提升"><a href="#3-声明提升" class="headerlink" title="3. 声明提升"></a>3. 声明提升</h4><p>“var” 声明的变量，可以在其声明语句前被使用<br>当函数开始的时候，就会处理 var 声明（脚本启动对应全局变量）。<br>换言之，var 声明的变量会在函数开头被定义，与它在代码中定义的位置无关（这里不考虑定义在嵌套函数中的情况）。</p>
+<p>例如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">function sayHi() &#123;</span><br><span class="line">  a &#x3D; &quot;Hello&quot;;</span><br><span class="line">  alert(a);</span><br><span class="line">  var a;</span><br><span class="line">&#125;</span><br><span class="line">sayHi();</span><br></pre></td></tr></table></figure>
+<p>与下面这种写法本质是一样的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">function sayHi() &#123;</span><br><span class="line">  var a;</span><br><span class="line">  a &#x3D; &quot;Hello&quot;;</span><br><span class="line">  alert(a);</span><br><span class="line">&#125;</span><br><span class="line">sayHi();</span><br></pre></td></tr></table></figure>
+<p>甚至于这种都是一样的 (由于 var 只有函数级的作用域，所以代码块是会被忽略的）)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">function sayHi() &#123;</span><br><span class="line">  a &#x3D; &quot;Hello&quot;; </span><br><span class="line">  if (false) &#123;</span><br><span class="line">    var a;</span><br><span class="line">  &#125;</span><br><span class="line">  alert(a);</span><br><span class="line">&#125;</span><br><span class="line">sayHi();</span><br></pre></td></tr></table></figure>
+<h4 id="4-全局声明"><a href="#4-全局声明" class="headerlink" title="4. 全局声明"></a>4. 全局声明</h4><p>var 在全局声明是会绑定成全局属性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var a &#x3D; 1;</span><br><span class="line">this.a &#x2F;&#x2F; 1</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<h3 id="IIFE"><a href="#IIFE" class="headerlink" title="IIFE"></a>IIFE</h3><p>在 ES6 发布之前，Javascript 只有 var 这一种声明方式，并且这种声明方式没有块级作用域，开发者发明了一种模仿块级作用域的方法： “立即调用函数表达式”（immediately-invoked function expressions，IIFE）。<br>如今，在有 let, const 声明变量的方式， IIFE 已经不再被使用了，但是我们经常还是可以再一些老的 code 中看到它 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(function() &#123;</span><br><span class="line"> var message &#x3D; &quot;Hello&quot;;</span><br><span class="line"> alert(message); &#x2F;&#x2F; Hello</span><br><span class="line">&#125;)();</span><br><span class="line">alert(message) &#x2F;&#x2F; Uncaught ReferenceError: message is not defined</span><br></pre></td></tr></table></figure>
+<hr>
+</blockquote>
+<h3 id="三-使用-let-创建变量"><a href="#三-使用-let-创建变量" class="headerlink" title="三. 使用 let 创建变量"></a>三. 使用 let 创建变量</h3><p>let 是 ES6 中被引进的一种变量定义方式，它与 var 声明变量主要有这几个区别</p>
+<ul>
+<li>增加了块级作用域</li>
+<li>消除变量提升作用（暂存死区TDZ(Temporal Dead Zone)）</li>
+<li>在一个作用域中不可重复声明</li>
+</ul>
+<hr>
+<h4 id="1-块级作用域"><a href="#1-块级作用域" class="headerlink" title="1. 块级作用域"></a>1. 块级作用域</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">let a &#x3D; 0;</span><br><span class="line">if(true)&#123;</span><br><span class="line">    let a &#x3D; 1;</span><br><span class="line">    console.log(a) &#x2F;&#x2F; 1</span><br><span class="line">&#125;</span><br><span class="line">console.log() &#x2F;&#x2F; 2</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-暂存死区"><a href="#2-暂存死区" class="headerlink" title="2. 暂存死区"></a>2. 暂存死区</h4><p>不同于 var, 所有的变量声明会被提升到作用域的开头位置，在声明前引用是合法的，let 的声明只有在执行到声明那一刻才会正式生效。  </p>
+<p>在程序的控制流程在新的作用域进行实例化时，在此作用域中用let、const声明的变量会在该作用域中先创建，但这个时候还没有进行词法绑定，没有进行对声明语句的赋值运算，所以是不能访问的，访问会抛出错误。所以在这运行流程一进入作用域创建变量，到变量开始可被访问的一段时间，就称为TDZ。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">console.log(a) &#x2F;&#x2F; undefined</span><br><span class="line">var a &#x3D; 0;</span><br><span class="line"></span><br><span class="line">console.log(b) &#x2F;&#x2F; undefined, 这个时候是隐式声明， 在严格模式（strict mode）下会抛出 ReferenceError 异常</span><br><span class="line">b &#x3D; 0; </span><br><span class="line"></span><br><span class="line">console.log(b) &#x2F;&#x2F; Uncaught ReferenceError：a is not defined</span><br><span class="line">let b &#x3D; 0</span><br></pre></td></tr></table></figure>
+
+<p>这个暂存死区，放到词法作用域/静态作用域中会产生一个有趣的现象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function test()&#123;</span><br><span class="line">let foo &#x3D; 33;</span><br><span class="line">if (foo) &#123;</span><br><span class="line">    let foo &#x3D; (foo + 55); &#x2F;&#x2F; Uncaught ReferenceError</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">test();</span><br></pre></td></tr></table></figure>
+<p>这是因为在进入 if 代码块之后，程序识别到一个新的 <code>foo</code> 已经被创建了，而且在被正式赋值之前，这个 <code>foo</code> 是不可被引用的， <code>(foo + 55)</code> 中 <code>foo</code> 并不能引用到外层词法作用域中的 <code>let foo = 33;</code></p>
+<h4 id="3-非全局属性"><a href="#3-非全局属性" class="headerlink" title="3. 非全局属性"></a>3. 非全局属性</h4><p>let不会在全局声明时（在最顶部的范围）创建 window/this 对象的属性。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var a &#x3D; 1;</span><br><span class="line">console.log(window.a); &#x2F;&#x2F; 1</span><br><span class="line">let b &#x3D; 2; </span><br><span class="line">console.log(window.b); &#x2F;&#x2F; undefined</span><br></pre></td></tr></table></figure>
+
+<h3 id="四-使用-const-创建变量"><a href="#四-使用-const-创建变量" class="headerlink" title="四. 使用 const 创建变量"></a>四. 使用 const 创建变量</h3><p><code>const</code> 创建变量与 <code>let</code> 基本是一致的，只是 <code>const</code> 不能被重新赋值, 而且必须在创建的同时给它初始值.  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const a &#x3D; 1;</span><br><span class="line">a &#x3D; 2; &#x2F;&#x2F; Uncaught TypeError: Assignment to constant variable.</span><br><span class="line">cosnt b; &#x2F;&#x2F; Uncaught SyntaxError: Missing initializer in const declaration</span><br></pre></td></tr></table></figure>
+
+<p>这里要注意的是，不能被赋值的是 <code>const</code> 声明的变量这个引用本身，但是对引用的引用是不受影响的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">const foo &#x3D; &#123;</span><br><span class="line">    bar: 1</span><br><span class="line">&#125;</span><br><span class="line">foo.bar &#x3D; 2 &#x2F;&#x2F; ok</span><br><span class="line">foo &#x3D; 2; &#x2F;&#x2F; Uncaught TypeError</span><br><span class="line"></span><br><span class="line">const arr &#x3D; [1]</span><br><span class="line">arr[0] &#x3D; 2 &#x2F;&#x2F; ok</span><br><span class="line">arr &#x3D; [2] &#x2F;&#x2F; Uncaught TypeError</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>参考:  </p>
+<ul>
+<li><em><a target="_blank" rel="noopener" href="https://zh.javascript.info/var">旧时的 var</a></em>  </li>
+<li><em><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/let">MDN Web Doc - let</a></em>  </li>
+<li><em><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/var">MDN Web Doc - var</a></em></li>
+</ul>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/javascript/" rel="tag"># javascript</a>
+              <a href="/blog/tags/basic/" rel="tag"># basic</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2019/05/17/How-to-create-a-new-post/" rel="prev" title="怎么在 Hexo 中创建一篇新的文章">
+      <i class="fa fa-chevron-left"></i> 怎么在 Hexo 中创建一篇新的文章
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2021/03/18/javsscript-promise-vs-timeout/" rel="next" title="Javascript 中 Promise 与 setTimeout 的执行顺序">
+      Javascript 中 Promise 与 setTimeout 的执行顺序 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B"><span class="nav-text">开始</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80-%E9%9A%90%E5%BC%8F%E5%88%9B%E5%BB%BA%E5%8F%98%E9%87%8F"><span class="nav-text">一 . 隐式创建变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C-%E4%BD%BF%E7%94%A8-var-%E5%88%9B%E5%BB%BA%E5%8F%98%E9%87%8F"><span class="nav-text">二. 使用 var 创建变量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="nav-text">1. 作用域</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E9%87%8D%E5%A4%8D%E5%A3%B0%E6%98%8E"><span class="nav-text">2. 重复声明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E5%A3%B0%E6%98%8E%E6%8F%90%E5%8D%87"><span class="nav-text">3. 声明提升</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E5%85%A8%E5%B1%80%E5%A3%B0%E6%98%8E"><span class="nav-text">4. 全局声明</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IIFE"><span class="nav-text">IIFE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89-%E4%BD%BF%E7%94%A8-let-%E5%88%9B%E5%BB%BA%E5%8F%98%E9%87%8F"><span class="nav-text">三. 使用 let 创建变量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%9D%97%E7%BA%A7%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="nav-text">1. 块级作用域</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E6%9A%82%E5%AD%98%E6%AD%BB%E5%8C%BA"><span class="nav-text">2. 暂存死区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E9%9D%9E%E5%85%A8%E5%B1%80%E5%B1%9E%E6%80%A7"><span class="nav-text">3. 非全局属性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B-%E4%BD%BF%E7%94%A8-const-%E5%88%9B%E5%BB%BA%E5%8F%98%E9%87%8F"><span class="nav-text">四. 使用 const 创建变量</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Ocean Wang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:yw.nj@outlook.com" title="E-Mail → mailto:yw.nj@outlook.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ocean Wang</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
