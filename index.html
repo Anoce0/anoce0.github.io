@@ -150,6 +150,101 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/04/15/babel-corejs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Ocean Wang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ocean's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/blog/2021/04/15/babel-corejs/" class="post-title-link" itemprop="url">babel 配置 polyfill 几种方式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-04-15 20:27:06" itemprop="dateCreated datePublished" datetime="2021-04-15T20:27:06+08:00">2021-04-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-04-16 16:02:45" itemprop="dateModified" datetime="2021-04-16T16:02:45+08:00">2021-04-16</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>corejs 升级到 version 3 之后, babel 中针对 corejs polyfill 有几种不同的配置, 主要使用@babel/preset-env 的 useBuiltIns 这个参数</p>
+<h2 id="1-useBuiltIns-entry-with-corejs-3"><a href="#1-useBuiltIns-entry-with-corejs-3" class="headerlink" title="1. useBuiltIns: entry with corejs: 3"></a>1. useBuiltIns: entry with corejs: 3</h2><p>这种方式,要求开发者讲一下代码显式添加到项目的入口处</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;core-js/stable&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;regenerator-runtime/runtime&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>babel 会将这段代码替换为目标环境需要的特定 polyfill, 例如,在 targeting 到 chrome 72 时,它会被替换为</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;core-js/modules/es.array.unscopables.flat&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;core-js/modules/es.array.unscopables.flat-map&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;core-js/modules/es.object.from-entries&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;core-js/modules/web.immediate&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-useBuiltIns-usage-with-corejs-3"><a href="#2-useBuiltIns-usage-with-corejs-3" class="headerlink" title="2. useBuiltIns: usage with corejs: 3"></a>2. useBuiltIns: usage with corejs: 3</h2><p>这种方式,不需要开发者添加 <code>core-js</code> <code>regenerator-runtime</code> 到项目入口, babel 会自动的将目标文件需要的 polyfills 添加到项目中<br>例如,如果我们有如下代码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> set = <span class="keyword">new</span> <span class="built_in">Set</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].includes(<span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<p>在 ie11 中会被被自动替换成</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;core-js/modules/es.array.includes&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;core-js/modules/es.array.iterator&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;core-js/modules/es.object.to-string&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;core-js/modules/es.set&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> set = <span class="keyword">new</span> <span class="built_in">Set</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].includes(<span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<p>它跟 <code>entry</code> 选项的主要区别在于</p>
+<ol>
+<li> <code>usage</code> 不需要在项目开头显式地添加 <code>import &quot;core-js/stable&quot;;</code></li>
+<li> <code>usage</code> 会在文件的作用域内添加被使用到的 polyfill, 而 <code>entry</code> 会在项目入口处添加</li>
+<li> <code>entry</code> 会根据目标环境(例如 ie11) 来添加所有的 polyfill, 而 <code>usage</code> 会检查被使用到的 polyfill</li>
+</ol>
+<h2 id="3-babel-plugin-transform-runtime-plugin"><a href="#3-babel-plugin-transform-runtime-plugin" class="headerlink" title="3. @babel/plugin-transform-runtime plugin"></a>3. @babel/plugin-transform-runtime plugin</h2><p>这个 plugin 可以使用 babel 的 注入 helper 来减少 codesize,通过是用这个 plugin, 可以代替使用 @babel/preset-env 的 useBuiltIns 的功能, 即 <code>&quot;useBuiltIns&quot;: false,</code>,这个插件与使用 useBuiltIns 主要有两个差别</p>
+<ol>
+<li>使用 <code>useBuiltIns</code> 的 polyfill 会污染全局变量, 而 <code>plugin-transform-runtime</code> 不会, <a target="_blank" rel="noopener" href="https://babeljs.io/docs/en/babel-plugin-transform-runtime#technical-details">这里</a>可以找他关于相关的技术细节</li>
+<li>使用 <code>plugin-transform-runtime</code> 可以显著降低输出的文件体积, 所以一般建议在开发 sdk 是使用这个配置</li>
+</ol>
+<blockquote>
+<p>参考:</p>
+<ul>
+<li><em><a target="_blank" rel="noopener" href="https://stackoverflow.com/q/52625979">Confused about useBuiltIns option of @babel/preset-env (using Browserslist Integration)</a></em></li>
+<li><em><a target="_blank" rel="noopener" href="https://github.com/zloirock/core-js/blob/master/docs/2019-03-19-core-js-3-babel-and-a-look-into-the-future.md">core-js@3, babel and a look into the future</a></em></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/03/24/ways-of-creating-class-in-js/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -823,14 +918,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/blog/tags/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
