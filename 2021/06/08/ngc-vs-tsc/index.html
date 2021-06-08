@@ -20,15 +20,19 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Ocean&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/tags/cache/index.html">
+  <meta name="description" content="关于 ngcngc ,全称是 Angular Template Compiler ,来源于包 @angular&#x2F;compiler-cli. ngc 与 tsc它在 angular 官网缺乏相关的文档, 有人在 angular repo 中提了个 issue 来讨论这个问题.同时有个 PR 正在在给 angular 添加 ngc 的 document摘录如下:    While most of th">
+<meta property="og:type" content="article">
+<meta property="og:title" content="angular 中的 ngc 命令">
+<meta property="og:url" content="http://yoursite.com/2021/06/08/ngc-vs-tsc/index.html">
 <meta property="og:site_name" content="Ocean&#39;s Blog">
+<meta property="og:description" content="关于 ngcngc ,全称是 Angular Template Compiler ,来源于包 @angular&#x2F;compiler-cli. ngc 与 tsc它在 angular 官网缺乏相关的文档, 有人在 angular repo 中提了个 issue 来讨论这个问题.同时有个 PR 正在在给 angular 添加 ngc 的 document摘录如下:    While most of th">
 <meta property="og:locale">
+<meta property="article:published_time" content="2021-06-08T11:21:15.000Z">
+<meta property="article:modified_time" content="2021-06-08T11:21:15.776Z">
 <meta property="article:author" content="Ocean Wang">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/tags/cache/">
+<link rel="canonical" href="http://yoursite.com/2021/06/08/ngc-vs-tsc/">
 
 
 <script id="page-configurations">
@@ -36,12 +40,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'default'
   };
 </script>
 
-  <title>Tag: cache | Ocean's Blog</title>
+  <title>angular 中的 ngc 命令 | Ocean's Blog</title>
   
 
 
@@ -144,51 +148,82 @@
         <div class="content-wrap">
           
 
-          <div class="content tag">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">cache
-          <small>Tag</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="default">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/06/08/ngc-vs-tsc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Ocean Wang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ocean's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          angular 中的 ngc 命令
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-06-08 19:21:15" itemprop="dateCreated datePublished" datetime="2021-06-08T19:21:15+08:00">2021-06-08</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
+        <h2 id="关于-ngc"><a href="#关于-ngc" class="headerlink" title="关于 ngc"></a>关于 ngc</h2><p>ngc ,全称是 <a target="_blank" rel="noopener" href="https://stackoverflow.com/a/51893626">Angular Template Compiler</a> ,来源于包 <code>@angular/compiler-cli</code>.</p>
+<h2 id="ngc-与-tsc"><a href="#ngc-与-tsc" class="headerlink" title="ngc 与 tsc"></a>ngc 与 tsc</h2><p>它在 angular 官网缺乏相关的文档, 有人在 angular repo 中提了个 <a target="_blank" rel="noopener" href="https://github.com/angular/angular/issues/29623">issue</a> 来讨论这个问题.<br>同时有个 <a target="_blank" rel="noopener" href="https://github.com/iRealNirmal/angular/commit/748db836c696ab5ac66e1cefb85192740ec8db32?short_path=0a65f1d#diff-0a65f1d37c6a41d9b8c6e91e484e9e58bb815f22e9b3425432c086c1b904eefa">PR</a> 正在在给 angular 添加 <code>ngc</code> 的 document<br>摘录如下:  </p>
+<blockquote>
+<p>While most of the time you interact with the Angular Compiler indirectly using Angular CLI, when debugging certain issues, you might find it useful to invoke the Angular Compiler directly. You can use the ngc command provided by the @angular/compiler-cli npm package to call the compiler from the command line.<br>The ngc command is just a wrapper around TypeScript’s tsc compiler command and is primarily configured via the tsconfig.json configuration options documented in the previous sections.<br>In addition to the configuration file, you can also use tsc command line options to configure ngc.  </p>
+</blockquote>
+<p>这里说 <code>ngc</code> 是 <code>tsc</code> 的一个 Wrapper, 我的实际测试发现这两个命令编译出来的包大小并不想等等, ngc 会更大一点.</p>
+<h2 id="ngc-与-ng-build"><a href="#ngc-与-ng-build" class="headerlink" title="ngc 与 ng build"></a>ngc 与 ng build</h2><p>stackoverflow 有人提了这个<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/44642696/whats-the-relationship-and-difference-between-ng-build-and-ngc">问题</a><br>简单解释:<br>Angular 提供了两种编译工具,JIT(Just in Time) and AOT (Ahead of Time compile) .<br><code>ng</code> == JIT<br><code>ngc</code> == AOT</p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-03-19T13:57:05+08:00"
-              content="2021-03-19">
-          03-19
-        </time>
-      </div>
+      <footer class="post-footer">
 
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2021/03/19/http-cache-mechanism/" itemprop="url">
-            <span itemprop="name">HTTP 缓存机制详解</span>
-          </a>
-      </div>
+        
 
-    </header>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2021/04/16/javsscript-promise-vs-timeout/" rel="prev" title="Javascript 中 Promise 与 setTimeout 的执行顺序">
+      <i class="fa fa-chevron-left"></i> Javascript 中 Promise 与 setTimeout 的执行顺序
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
   </article>
-
-    </div>
-  </div>
   
   
-  
-
   
 
 
@@ -241,6 +276,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E-ngc"><span class="nav-text">关于 ngc</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ngc-%E4%B8%8E-tsc"><span class="nav-text">ngc 与 tsc</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ngc-%E4%B8%8E-ng-build"><span class="nav-text">ngc 与 ng build</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

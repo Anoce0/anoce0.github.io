@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="考虑以下这种情况, 哪条语句会先打印？ 1234567setTimeout(()&#x3D;&gt; &amp;#123;    console.log(&quot;timeout&quot;);&amp;#125;)Promise.resolve().then(()&#x3D;&gt;&amp;#123;    console.log(&quot;promise&quot;);&amp;#125;)console.log(&amp;q">
+  <meta name="description" content="考虑以下这种情况, 哪条语句会先打印？ 1234567setTimeout(()&#x3D;&gt; &amp;#123;    console.log(&quot;timeout&quot;);&amp;#125;)Promise.resolve().then(()&#x3D;&gt;&amp;#123;    console.log(&quot;promise&quot;);&amp;#125;)console.log(&quot;main&amp;q">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Javascript 中 Promise 与 setTimeout 的执行顺序">
 <meta property="og:url" content="http://yoursite.com/2021/04/16/javsscript-promise-vs-timeout/index.html">
 <meta property="og:site_name" content="Ocean&#39;s Blog">
-<meta property="og:description" content="考虑以下这种情况, 哪条语句会先打印？ 1234567setTimeout(()&#x3D;&gt; &amp;#123;    console.log(&quot;timeout&quot;);&amp;#125;)Promise.resolve().then(()&#x3D;&gt;&amp;#123;    console.log(&quot;promise&quot;);&amp;#125;)console.log(&amp;q">
+<meta property="og:description" content="考虑以下这种情况, 哪条语句会先打印？ 1234567setTimeout(()&#x3D;&gt; &amp;#123;    console.log(&quot;timeout&quot;);&amp;#125;)Promise.resolve().then(()&#x3D;&gt;&amp;#123;    console.log(&quot;promise&quot;);&amp;#125;)console.log(&quot;main&amp;q">
 <meta property="og:locale">
 <meta property="article:published_time" content="2021-04-16T08:13:12.006Z">
-<meta property="article:modified_time" content="2021-04-16T08:13:12.006Z">
+<meta property="article:modified_time" content="2021-06-08T11:29:02.268Z">
 <meta property="article:author" content="Ocean Wang">
 <meta property="article:tag" content="javascript">
 <meta property="article:tag" content="eventloop">
@@ -182,6 +182,13 @@
 
               <time title="Created: 2021-04-16 16:13:12" itemprop="dateCreated datePublished" datetime="2021-04-16T16:13:12+08:00">2021-04-16</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-06-08 19:29:02" itemprop="dateModified" datetime="2021-06-08T19:29:02+08:00">2021-06-08</time>
+              </span>
 
           
 
@@ -195,7 +202,8 @@
 
       
         <p>考虑以下这种情况, 哪条语句会先打印？</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(()&#x3D;&gt; &#123;</span><br><span class="line">    console.log(&quot;timeout&quot;);</span><br><span class="line">&#125;)</span><br><span class="line">Promise.resolve().then(()&#x3D;&gt;&#123;</span><br><span class="line">    console.log(&quot;promise&quot;);</span><br><span class="line">&#125;)</span><br><span class="line">console.log(&quot;main&quot;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;timeout&quot;</span>);</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">Promise</span>.resolve().then(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;promise&quot;</span>);</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&quot;main&quot;</span>);</span><br></pre></td></tr></table></figure>
+
 <p>在考虑这个问题之前，我们有必要了解一下 javascript 的运行机制。  </p>
 <p>首先我们要明白一个基本原理，Javascript，无论是基于浏览器还是基于 Nodejs 环境，都是基于事件循环（event loop) 而运行的:  </p>
 <blockquote>
@@ -209,7 +217,7 @@
 <li>运行 <code>console.log(&quot;main&quot;);</code>, <code>&quot;main&quot;</code> 被打印出来</li>
 <li>这时当前脚本执行完毕，JS 引擎闲置，则会执行 eventloop 中的任务 <code>console.log(&quot;timeout&quot;);</code> 与 <code>console.log(&quot;promise&quot;);</code></li>
 </ol>
-<p>通过上面的步骤，似乎是 <code>timeout</code> 会比 <code>promise</code> 先打印？但是这并不与实际 JS 中的运行结果一致，发生了什么呢？ </p>
+<p>通过上面的步骤，似乎是 <code>timeout</code> 会比 <code>promise</code> 先打印？但是这并不与实际 JS 中的运行结果一致，发生了什么呢？</p>
 <p>这里就涉及到了我们 3 中提到的 eventloop 与 2 中不一致的问题，javascript 中对于 eventloop 或者说任务队列，其实分为两种，  宏任务 (macrotask) 微任务(microtask).</p>
 <ul>
 <li>宏任务<br> 对于常见的事件，例如：setTimeout, ajax 请求， 浏览器事件，都会被放到宏任务中</li>
@@ -226,7 +234,8 @@
 <li>这是微任务队列为空，JS 引擎去执行 宏任务队列中的任务 <code>console.log(&quot;timeout&quot;);</code>， <code>&quot;timeout&quot;</code> 被打印出来</li>
 </ol>
 <p>OK, 到目前，我们搞清楚了setTimeout  与 Promise 的执行顺序是由宏任务与微任务队列的优先级决定的，那么我们在其中考虑一个新的场景</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">document.body.style &#x3D; &#39;background:red&#39;;</span><br><span class="line"></span><br><span class="line">setTimeout(()&#x3D;&gt; &#123;</span><br><span class="line">    document.body.style &#x3D; &#39;background:black&#39;;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">Promise.resolve().then(()&#x3D;&gt; &#123;</span><br><span class="line">    document.body.style &#x3D; &#39;background:white&#39;;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.body.style = <span class="string">&#x27;background:red&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">document</span>.body.style = <span class="string">&#x27;background:black&#x27;</span>;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">Promise</span>.resolve().then(<span class="function">()=&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">document</span>.body.style = <span class="string">&#x27;background:white&#x27;</span>;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
 <p>请问目前页面的颜色改变了几次？</p>
 <p>要回答这个问题，我们比如引入一个新的知识点<strong>页面渲染</strong>， 我们知道，当 JS 引擎被阻塞是，页面渲染是会被暂停的，只有 JS 引擎空闲时，页面才会完成渲染，这通常也是我们页面优化的一个方面：尽量避免 JS 引擎被长时间占据，这回导致页面是去反应。</p>
 <blockquote>
@@ -269,10 +278,13 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/blog/2021/04/15/babel-corejs/" rel="prev" title="babel 配置 polyfill 几种方式">
-      <i class="fa fa-chevron-left"></i> babel 配置 polyfill 几种方式
+    <a href="/blog/2021/04/16/ways-of-creating-class-in-js/" rel="prev" title="Javascript 创建对象的几种方式">
+      <i class="fa fa-chevron-left"></i> Javascript 创建对象的几种方式
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/blog/2021/06/08/ngc-vs-tsc/" rel="next" title="angular 中的 ngc 命令">
+      angular 中的 ngc 命令 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -344,7 +356,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
